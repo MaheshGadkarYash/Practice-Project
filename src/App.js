@@ -11,19 +11,21 @@ import {
   SpecialMenu,
 } from "./container";
 import { Navbar } from "./components";
+import Router from "./routes/Router";
 function App() {
   return (
     <div>
-      <Navbar />
-      <Header />
-      <AboutUs />
-      <SpecialMenu />
-      <Chef />
-      <Intro />
-      <Laurels />
-      <Gallery />
-      <FindUs />
-      <Footer />
+    <Router/>
+      {/* <Navbar /> */}
+      {/* <Header /> */}
+      {/* <AboutUs /> */}
+      {/* <SpecialMenu /> */}
+      {/* <Chef /> */}
+      {/* <Intro /> */}
+      {/* <Laurels /> */}
+      {/* <Gallery /> */}
+      {/* <FindUs /> */}
+      {/* <Footer /> */}
     </div>
   );
 }
