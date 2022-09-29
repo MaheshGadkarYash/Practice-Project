@@ -29,7 +29,7 @@ const Registration = () => {
             <span>Confirm Password</span>
             <i></i>
           </div>
-          <div className="links">
+          <div className="link">
             <Link to="/login"> Login</Link>
           </div>
           <input type="submit" value="Register" />

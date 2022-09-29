@@ -122,21 +122,20 @@
   height: 44px;
 }
 
-.links {
+.link {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
-.links a {
+.link a {
   margin: 10px 0;
-  font-size: 1em;
-  color: #8f8f8f;
+  font-size: 1.2em;
+  color: #45f3ff;
   text-decoration: none;
 }
 
-.links a:hover,
-.links a:nth-child(1) {
-  color: #45f3ff;
+.link a:hover {
+  color: #8f8f8f;
 }
 
 input[type="submit"] {
