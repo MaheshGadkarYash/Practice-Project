@@ -1,10 +1,13 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./Login.module.css";
 import { useFormik } from "formik";
 import { loginSchema } from "./validation.js";
+import axios from "../../api/axios";
 
+const LOGIN_URL = "/login";
 const Login = () => {
+  const navigate = useNavigate();
   const initialValues = {
     name: "",
     password: "",
@@ -17,8 +20,32 @@ const Login = () => {
       validationSchema: loginSchema,
       validateOnChange: true,
       // validateOnBlur: false,
-      onSubmit: (values, action) => {
+      onSubmit: async (values, action) => {
+        const { name, password } = values;
         console.log(values);
+        // console.log(name);
+
+        try {
+          const response = await axios.post(
+            LOGIN_URL,
+            JSON.stringify({ name, password }),
+            {
+              headers: { "Content-Type": "application/json" },
+              // withCredentials: true,
+            }
+          );
+          console.log(response.data);
+        } catch (error) {
+          if (!error?.response) {
+            console.log(`No Server Response`);
+          } else if (error.response?.status === 409) {
+            console.log(`Username Taken`);
+          } else {
+            console.log(`Registration Failed`);
+          }
+        }
+        alert("Login Successfully");
+        navigate("/");
         action.resetForm();
       },
     });
