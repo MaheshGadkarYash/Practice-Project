@@ -1,9 +1,6 @@
 {
   "users": [
-    {
-      "id": 1,
-      "email": "mahesh@gmail.com",
-      "password": "123456"
-    }
+    { "id": 1, "name": "mahesh", "password": "123456" },
+    { "id": 2, "name": "pritam", "password": "123456" }
   ]
 }

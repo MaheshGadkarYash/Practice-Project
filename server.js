@@ -27,7 +27,7 @@ const createToken = (payload) => {
 };
 
 // create a function whether user is authenticated or not
-const isAuthenticated = ({ name, password }) => {
+const isLoginAuthenticated = ({ name, password }) => {
   return (
     //It will check name &pass if correct it will return true otherwise false
     userDb.users.findIndex(
@@ -36,14 +36,21 @@ const isAuthenticated = ({ name, password }) => {
   );
 };
 
+const isRegisterAuthenticated = ({ name }) => {
+  return (
+    //It will check name &pass if correct it will return true otherwise false
+    userDb.users.findIndex((user) => user.name === name) !== -1
+  );
+};
+
 //Creating Register Api
 server.post("/api/auth/register", (req, res) => {
   // Destructure the data coming from frontend react name and password
   const { name, password } = req.body;
 
-  if (isAuthenticated({ name, password })) {
+  if (isRegisterAuthenticated({ name })) {
     const status = 401;
-    const message = "Name & Password already exist";
+    const message = "Username Is Already Exist";
     res.status(status).json({ status, message });
     return;
   }
@@ -86,9 +93,9 @@ server.post("/api/auth/register", (req, res) => {
 //Create Login Api
 server.post("/api/auth/login", (req, res) => {
   const { name, password } = req.body;
-  if (!isAuthenticated({ name, password })) {
+  if (!isLoginAuthenticated({ name, password })) {
     const status = 401;
-    const message = "Incorrect name Or Password";
+    const message = "Incorrect Name Or Password";
     res.status(status).json({ status, message });
   }
   const access_token = createToken({ name, password });
