@@ -1,12 +1,45 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { MdOutlineRestaurantMenu } from "react-icons/md";
+import { FaUser } from "react-icons/fa";
+import { BiLogOut } from "react-icons/bi";
 import images from "../../constants/images";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
+// import "./dropdown.css";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const [login, setLogin] = useState("");
   const [toggleMenu, setToggleMenu] = React.useState(false);
+  useEffect(() => {
+    hydrateStateWithLocalStorage();
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("login");
+    navigate("/login");
+  };
+
+  const hydrateStateWithLocalStorage = () => {
+    if (localStorage.hasOwnProperty("login")) {
+      let token = localStorage.getItem("login");
+      try {
+        token = JSON.parse(token);
+        setLogin(token);
+      } catch (error) {
+        setLogin("");
+      }
+      console.log("login", login);
+    }
+  };
+
+  //Toggle function
+  const menuToggle = () => {
+    const toggleMenu = document.querySelector(".menu");
+    toggleMenu.classList.toggle("active");
+  };
+
   return (
     <nav className="app__navbar">
       <div className="app__navbar-logo">
@@ -30,13 +63,36 @@ const Navbar = () => {
         </li>
       </ul>
       <div className="app__navbar-login">
-        <Link to="/login" className="p__opensans">
+        {/* <Link to="/login" className="p__opensans">
           Log In / Registration
-        </Link>
-        <div />
+        </Link> */}
         <Link to="/" className="p__opensans">
           Book Table
         </Link>
+        <div />
+        <button className="custom__button" onClick={handleLogout}>
+          Logout
+        </button>
+        {/* <div className="action">
+          <Link to="#" className="profile">
+            <FaUser color="whitesmoke" size={30} onClick={menuToggle}></FaUser>
+          </Link>
+          <div className="menu">
+            <h3>{user && user.email}</h3>
+            <ul>
+              <li>
+                <BiLogOut
+                  color="black"
+                  size={30}
+                  onClick={handleLogout}
+                ></BiLogOut>
+                <Link to="#">
+                  <span onClick={handleLogout}>Logout</span>
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div> */}
       </div>
       <div className="app__navbar-smallscreen">
         <GiHamburgerMenu
