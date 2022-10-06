@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Login.module.css";
 import { useFormik } from "formik";
@@ -7,6 +7,7 @@ import axios from "../../api/axios";
 
 const LOGIN_URL = "/login";
 const Login = () => {
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const initialValues = {
     name: "",
@@ -35,13 +36,21 @@ const Login = () => {
             }
           );
           console.log(response.data);
+          // set token to local storage
+          localStorage.setItem(
+            "login",
+            JSON.stringify({
+              userLogin: true,
+              token: response.data.access_token,
+            })
+          );
         } catch (error) {
           if (!error?.response) {
             console.log(`No Server Response`);
           } else if (error.response?.status === 409) {
             console.log(`Username Taken`);
           } else {
-            console.log(`Registration Failed`);
+            setError(error.response.data.message);
           }
         }
         alert("Login Successfully");
@@ -96,6 +105,7 @@ const Login = () => {
             <Link to="/registration"> Signup</Link>
           </div>
           <input type="submit" value="Login" className={styles.submit1} />
+          {error && <p className={styles.form_error}>{error}</p>}
         </form>
       </div>
     </div>

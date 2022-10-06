@@ -1,17 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import styles from "./Registration.module.css";
 import { signUpSchema } from "./validation";
+import axios from "../../api/axios";
 
+const REGISTER_URL = "/register";
 const Registration = () => {
+  const [error, setError] = useState("");
+
   // Take initial values of form
   const initialValues = {
     name: "",
-    email: "",
+    // email: "",
     password: "",
-    confirmPassword: "",
-    city: "",
+    // confirmPassword: "",
+    // city: "",
   };
 
   // To use all formik function we can extract from useFormik and also we can do it validation in that
@@ -21,9 +25,41 @@ const Registration = () => {
       validationSchema: signUpSchema,
       validateOnChange: true,
       // validateOnBlur: false,
-      onSubmit: (values, action) => {
+      onSubmit: async (values, action) => {
+        const { name, password } = values;
         console.log(values);
+        // console.log(name);
+
+        try {
+          const response = await axios.post(
+            REGISTER_URL,
+            JSON.stringify({ name, password }),
+            {
+              headers: { "Content-Type": "application/json" },
+              // withCredentials: true,
+            }
+          );
+          console.log(response.data);
+          // set token to local storage
+          localStorage.setItem(
+            "login",
+            JSON.stringify({
+              userLogin: true,
+              token: response.data.access_token,
+            })
+          );
+        } catch (error) {
+          if (!error?.response) {
+            console.log(`No Server Response`);
+          } else if (error.response?.status === 409) {
+            console.log(`Username Taken`);
+          } else {
+            setError(error.response.data.message);
+          }
+        }
+        // console.log(values);
         action.resetForm();
+        alert("User Register Successfully");
       },
     });
 
@@ -52,7 +88,7 @@ const Registration = () => {
             <p className={styles.form_error}>{errors.name}</p>
           ) : null}
 
-          <div className={styles.inputBox}>
+          {/* <div className={styles.inputBox}>
             <input
               type="email"
               autoComplete="off"
@@ -68,9 +104,9 @@ const Registration = () => {
           </div>
           {errors.email && touched.email ? (
             <p className={styles.form_error}>{errors.email}</p>
-          ) : null}
+          ) : null} */}
 
-          <div className={styles.inputBox}>
+          {/* <div className={styles.inputBox}>
             <input
               type="text"
               name="city"
@@ -86,7 +122,7 @@ const Registration = () => {
           </div>
           {errors.city && touched.city ? (
             <p className={styles.form_error}>{errors.city}</p>
-          ) : null}
+          ) : null} */}
 
           <div className={styles.inputBox}>
             <input
@@ -106,7 +142,7 @@ const Registration = () => {
             <p className={styles.form_error}>{errors.password}</p>
           ) : null}
 
-          <div className={styles.inputBox}>
+          {/* <div className={styles.inputBox}>
             <input
               type="password"
               name="confirmPassword"
@@ -122,12 +158,13 @@ const Registration = () => {
           </div>
           {errors.confirmPassword && touched.confirmPassword ? (
             <p className={styles.form_error}>{errors.confirmPassword}</p>
-          ) : null}
+          ) : null} */}
 
           <div className={styles.link}>
             <Link to="/login"> Login</Link>
           </div>
           <input type="submit" value="Register" className={styles.submit2} />
+          {error && <p className={styles.form_error}>{error}</p>}
         </form>
       </div>
     </div>
