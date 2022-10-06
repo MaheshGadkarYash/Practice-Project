@@ -27,23 +27,23 @@ const createToken = (payload) => {
 };
 
 // create a function whether user is authenticated or not
-const isAuthenticated = ({ email, password }) => {
+const isAuthenticated = ({ name, password }) => {
   return (
-    //It will check email &pass if correct it will return true otherwise false
+    //It will check name &pass if correct it will return true otherwise false
     userDb.users.findIndex(
-      (user) => user.email === email && user.password === password
+      (user) => user.name === name && user.password === password
     ) !== -1
   );
 };
 
 //Creating Register Api
 server.post("/api/auth/register", (req, res) => {
-  // Destructure the data coming from frontend react email and password
-  const { email, password } = req.body;
+  // Destructure the data coming from frontend react name and password
+  const { name, password } = req.body;
 
-  if (isAuthenticated({ email, password })) {
+  if (isAuthenticated({ name, password })) {
     const status = 401;
-    const message = "Email & Password already exist";
+    const message = "Name & Password already exist";
     res.status(status).json({ status, message });
     return;
   }
@@ -63,7 +63,7 @@ server.post("/api/auth/register", (req, res) => {
     // We need to generate id .it will update the id.from this we get last item id
     let last_item_id = data.users[data.users.length - 1].id;
 
-    data.users.push({ id: last_item_id + 1, email: email, password: password });
+    data.users.push({ id: last_item_id + 1, name: name, password: password });
     let writeData = fs.writeFile(
       "./users.json",
       JSON.stringify(data),
@@ -79,19 +79,19 @@ server.post("/api/auth/register", (req, res) => {
   });
 
   //   create a token for new user
-  const access_token = createToken({ email, password });
+  const access_token = createToken({ name, password });
   res.status(200).json({ access_token });
 });
 
 //Create Login Api
 server.post("/api/auth/login", (req, res) => {
-  const { email, password } = req.body;
-  if (!isAuthenticated({ email, password })) {
+  const { name, password } = req.body;
+  if (!isAuthenticated({ name, password })) {
     const status = 401;
-    const message = "Incorrect Email Or Password";
+    const message = "Incorrect name Or Password";
     res.status(status).json({ status, message });
   }
-  const access_token = createToken({ email, password });
+  const access_token = createToken({ name, password });
   res.status(200).json({ access_token });
 });
 
