@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { Home } from "../components";
+import ProtectedRoute from "./ProtectedRoute";
 import {
   AboutUs,
   Login,
@@ -14,7 +15,15 @@ const Router = () => {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Home />} />
+        {/* <Route path="/" element={<Home />} /> */}
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/menu" element={<SpecialMenu />} />
         <Route path="/awards" element={<Laurels />} />
